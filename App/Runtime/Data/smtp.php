@@ -1,0 +1,1 @@
+<?php	return array ( 'MAIL_ADDRESS' => 'admin@yhb360.com', 'MAIL_SMTP' => 'smtp.ym.163.com', 'MAIL_PORT' => '25', 'MAIL_LOGINNAME' => 'admin@yhb360.com', 'MAIL_PASSWORD' => 'taglogsms', 'MAIL_SECURE' => NULL, 'MAIL_CHARSET' => 'UTF-8', 'MAIL_AUTH' => true, 'MAIL_HTML' => true, );?>

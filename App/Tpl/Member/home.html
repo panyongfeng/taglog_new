@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="./favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<link type="text/css" href="http://yhb360.qiniudn.com/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+<script type="text/javascript">
+	var browserInfo = {browser:"", version: ""};
+	var ua = navigator.userAgent.toLowerCase();
+	if (window.ActiveXObject) {
+		browserInfo.browser = "IE";
+		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
+		if(browserInfo.version <= 7){
+			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
+			location.href = 'http://chrome.360.cn/';
+		}
+	}
+</script>
+<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
+</head>
+<body class="no_index">
+	<include file="Public:top"/>
+    <div class="naver">
+         <div class="w980">
+            <a href="{:U('index/index')}" >首页</a> &gt;
+            <a href="{:U('member/home')}" >商家中心</a>
+        </div>
+    </div>
+    <div class="w980 main_table">
+		<div class="member_box">
+			<include file="Public:member_banner"/>
+			<div class="member_info">
+				<ul class="info_name">
+					<li class="active"><a href="{:U('member/home')}">商家资料</a></li>
+					<li><a href="{:U('member/home','act=avatar')}">设置logo</a></li>
+					<li><a href="{:U('member/home','act=message')}"><a href="{:U('member/home','act=message')}">站内通知<if condition="$message_alert_count gt 0"><span style="color: red;">({$message_alert_count})</span></if></a></a></li>
+					<li><a href="{:U('member/home','act=resetpassword')}">修改密码</a></li>
+				</ul>
+				<div class="info_box">
+					<div class="info_title"><span>公司信息:</span></div>
+					<div class="info_list">
+						<span class="info_list_name">电话:</span>
+						<span class="info_value"> {$member.phone_number} </span>
+						<a class="changecontent" rel="phone_number"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">qq号:</span>
+						<span class="info_value"> {$member.qq} </span>
+						<a class="changecontent" rel="qq"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">公司全称:</span>
+						<span class="info_value"> {$member.company_name} </span>
+						<a class="changecontent" rel="company_name"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">简称:</span>
+						<span class="info_value"> {$member.short_name} </span>
+						<a class="changecontent" rel="short_name"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">公司官网:</span>
+						<span class="info_value"> <if condition="$member['company_website']"><a target="_blank" href="{$member.company_website}">{$member.company_website}</a></if>  </span>
+						<a class="changecontent" rel="company_website"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">网店链接:</span>
+						<span class="info_value"> <if condition="$member['company_salelink']"><a target="_blank" href="{$member.company_salelink}">{$member.company_salelink}</a></if>  </span>
+						<a class="changecontent" rel="company_salelink"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">公司地址:</span>
+						<span class="info_value"> {$member.company_address}  </span>
+						<a class="changecontent" rel="company_address"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+					<div class="info_list">
+						<span class="info_list_name">公司说明:</span>
+						<span class="info_value"><if condition="$member['company_description']"><pre> {$member.company_description} </pre></if></span>
+						<a class="changecontent" rel="company_description"  href="javascript:void(0)"> <img src="http://yhb360.qiniudn.com/images/edit_p.png"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+	<include file="Public:feedback"/>
+<script type="text/javascript">
+	var add_temp = '';
+
+	function ajax_edit_category(obj){
+		if($(obj).val() != add_temp){
+			$.post('{:U("member/updateinfo")}', {name:$(obj).attr('rel'),value:$(obj).val()}, function(data){
+				if(data.status == 1){
+					if($(obj).attr('rel') == 'short_name') location.reload() ;
+					if($(obj).attr('rel') == 'company_website' || $(obj).attr('rel') == 'company_salelink') {
+						$(obj).before('<span><a target="_blank" href="' + data.data + '">' + data.data + '</a></span>');
+					}else if($(obj).attr('rel') == 'company_description') {
+						$(obj).before('<span class="info_value"><pre>' + data.data + '</pre></span>');
+					}else{
+						$(obj).before('<span class="info_value">' + data.data + '</span>');
+					}
+					
+					$(obj).remove();
+				}else{
+					$(obj).before('<span class="info_value">' + add_temp + '</span>');
+					$(obj).remove();
+				}
+			});
+		}else{
+			$(obj).before('<span class="info_value">' + add_temp + '</span>');
+			$(obj).remove();
+		}
+		$("a[rel="+$(obj).attr('rel')+"]").show();
+		return true;
+	}
+	$(function(){
+		$('.changecontent').click(function(){
+			add_temp = $(this).prev().text();
+			var name = $(this).attr('rel');
+			if(name == 'company_description'){
+				var $html = '<textarea style="text-align: left;text-align: left;width: 500px;height: 80px;" rel="'+ name + '" id="edit_category" onblur="ajax_edit_category(this)">'+ add_temp +'</textarea>';
+			}else if(name == 'company_address'){
+				var $html = '<input style="width:400px;" type="text" style="text-align: center;" rel="'+ name +'" value="'+ add_temp +'" id="edit_category" onblur="ajax_edit_category(this)"/>';
+			}else{
+				var $html = '<input type="text" style="min-width:200px;text-align: center;" rel="'+ name +'" value="'+ add_temp +'" id="edit_category" onblur="ajax_edit_category(this)"/>';
+			}
+			$(this).parent().children('span').eq(1).remove();
+			$(this).before($html);
+			$(this).hide();
+			$('#edit_category').focus();
+		});
+
+	});
+	
+</script>
+</body>
+
+</html>

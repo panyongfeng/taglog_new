@@ -1,0 +1,18 @@
+<div class="nav-collapse collapse">
+	<ul class="nav"> 
+		<li <if condition="strtolower(MODULE_NAME) eq 'member'">class="active"</if>><a  href="{:U('member/index')}">商家列表
+</a></li>
+		<li <if condition="strtolower(MODULE_NAME) eq 'product'">class="active"</if>><a  href="{:U('product/index')}">说明书列表
+</a></li>
+		<li <if condition="strtolower(MODULE_NAME) eq 'feedback'">class="active"</if>><a  href="{:U('feedback/index')}">用户反馈
+</a></li>
+		<li <if condition="strtolower(MODULE_NAME) eq 'video'">class="active"</if>><a  href="{:U('video/index')}">视频管理
+</a></li>
+		<li <if condition="strtolower(MODULE_NAME) eq 'setting'">class="active"</if>><a  href="{:U('setting/index')}">系统设置
+</a></li>
+	</ul>
+	<ul class="nav pull-right">
+		<li style=" width: auto;margin-right: 5px;"><a href="{:U('user/edit')}" style="padding: 10px 0px;width: auto;">欢迎你，{$Think.session.admin_name}</a></li>
+		<li style=" width: auto;margin-right: 5px;"><a href="{:U('user/logout')}">退出</a></li>
+	</ul>
+</div>

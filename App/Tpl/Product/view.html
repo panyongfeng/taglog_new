@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<if condition="$_GET[type] == 'rewrite'">
+<base href="http://{$_SERVER['HTTP_HOST']}">
+</if>
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="./favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link type="text/css" href="http://yhb360.qiniudn.com/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'msie')">
+<style>
+.product_view_box {
+	width: 402px;
+}
+.product_view_page_box {
+	width: 385px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+}
+.product_view_page_box_big {
+	overflow-y:hidden;
+}
+</style>
+</if>
+<script type="text/javascript">
+	var browserInfo = {browser:"", version: ""};
+	var ua = navigator.userAgent.toLowerCase();
+	if (window.ActiveXObject) {
+		browserInfo.browser = "IE";
+		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
+		if(browserInfo.version <= 7){
+			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
+			location.href = 'http://chrome.360.cn/';
+		}
+	}
+</script>
+<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/layer/layer.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
+</head>
+<body class="no_index">
+	<div class="top">
+		<div class="w980">
+			<div class="login">
+				<if condition="session('?email')">
+				<a title="个人中心" href="{:U('member/home')}">{:session('email')}&nbsp;<font id="message_tips" color="#1DB1AB">(0)</font></a>
+				<span><a href="{:U('member/index')}">我的说明书</a></span>
+				<a href="{:U('member/logout')}">退出</a>
+				<else/>
+				<span><a target="_blank" href="{:U('member/login')}">登录</a></span>
+				<a target="_blank" href="{:U('member/register')}">注册</a>
+				</if>
+			</div>
+			<a href="{:U('index/index')}" style="float:left"><img src="http://yhb360.qiniudn.com/images/logo.png" class="logo"></a>
+		</div>
+	</div>
+    <div class="naver">
+         <div class="w980">
+			<a class="input_botton fr" href="{:U('product/edit','product_id='.$product['product_id'].'&verify='.$_GET['verify'])}" id="product_submit"><img src="http://yhb360.qiniudn.com/images/view2_ico.png"><span>返回编辑</span></a>
+            <a href="javascript:void(0);" class="return_index" rel="index">返回首页</a> &gt;
+			<a href="javascript:void(0);" class="return_index" rel="member_index">返回根目录</a>&gt;
+            <a href="{:U('product/edit','product_id='.$product['product_id'].'&verify='.$_GET['verify'])}" >返回编辑</a>
+        </div>
+    </div>
+    <div class="w980 main_table">
+        <div class="product_left">
+			<if condition="$_GET['verify'] && !$product['member_id']"><button class="qrpng_botton" id="earn_button">认领此说明书</button></if>
+			<p class="qrpng1">扫一扫试试看吧~</p>
+			<img class="qrpng" src="{:U('product/qrdownload','product_id='.$product['product_id'])}">
+			<button class="qrpng_botton" id="qrpng_botton">下载二维码</button>
+			<p class="qrpng_2">可将二维码印刷或者粘贴在产品、包装或者说明书上用户扫描即可浏览</p>
+			<p class="qrpng_3">用户也可通过以下链接直接访问：</p>
+			<p class="qrpng_4"><a target="_blank" href="{$link}">{$link}</a></p>
+        </div>
+		<div class="product_right">
+			<div class="product_view_box">
+				<div class="product_view_page_box">
+					<div class="product_view_page_box_big">
+						<volist name="pages" id="page" key="pages_k">
+						<div class="product_view_page">
+							<div class="product_view_page_content">
+								<!--
+								<if condition="$product['image'] != ''">
+								<img class="uploadify_img" width="100%" src="{$product[image]}">
+								</if>
+								-->
+								<p class="product_view_name">{$product.name}</p>
+								<p class="product_view_content_name">{$page.subject}</p>
+								<volist name="page.content" id="content">
+								<div style="margin-bottom:20px;">
+									<div class="product_view_description">{$content.description}</div>
+									<volist name="content.file" id="file">
+									<div class="product_view_file">
+										<div class="product_view_file_box">
+											<if condition="$file['type'] == 'image'">
+											<img class="uploadify_img" width="100%" src="{$file.path}">
+											<elseif condition="$file['type'] == 'video'" />
+											<if condition="$file['status'] == 1">
+											<php> $file['height'] = $file['height']?$file['height']:490 </php>
+											<php> $file['width'] = $file['width'] ? $file['width']:600 </php>
+											<php> $swf_height = 348 * $file['height'] /$file['width'] </php>
+											<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'chrome')">
+											<video width="100%" class="polyvplayer{$file.vid} video" preload="metadata" controls="controls">
+												<source src="{$file.mp4}" type="video/mp4" />
+											</video>
+											<script>
+												var swf_width = $('.product_view_file_box').width();
+												var swf_height = swf_width * {$file.height}/{$file.width};
+												$('.polyvplayer{$file.vid}').height(swf_height);
+											</script>
+											<else />
+											<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" height="{$swf_height}" width="348" id="polyvplayer{$file.vid}">
+											<param name="movie" value="http://player.polyv.net/videos/{$file.vid}.swf">
+											<param name="allowscriptaccess" value="always">
+											<param name="wmode" value="opaque">   
+											<param name="allowFullScreen" value="true" />
+											<embed src="http://player.polyv.net/videos/{$file.vid}.swf" width="348" height="{$swf_height}" type="application/x-shockwave-flash" allowscriptaccess="always" wmode="opaque" name="polyvplayer{$file.vid}" allowFullScreen="true" /></embed>
+											</object>
+											</if>
+											<elseif condition="$file['status'] == 0" />
+											<img class="uploadify_img" width="100%" src="{$file.first_image}">
+											<div rel="'+jsonobj.data[0].vid+'" class="uploadify_img_status"><span>根据国家政策规定，您的视频正在被审核。建议您先进行其他编辑。20分钟左右后再查看结果将会自动生效。</span></div>
+											<elseif condition="$file['status'] == 2" />
+											<img class="uploadify_img" width="100%" src="{$file.first_image}">
+											<div rel="'+jsonobj.data[0].vid+'" class="uploadify_img_status"><span>根据国家政策规定，您的视频审核失败。</span></div>
+											<elseif condition="$file['status'] == 3" />
+											<img class="uploadify_img" width="100%" src="{$file.first_image}">
+											<div rel="'+jsonobj.data[0].vid+'" class="uploadify_img_status"><span>根据国家政策规定，您的视频存在违法信息，已被删除。</span></div>
+											</if>
+											</if>
+										</div>
+									</div>
+									</volist>
+								</div>
+								</volist>
+							</div>
+						</div>
+						</volist>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="product_view_botton_left"></div>
+				<div class="product_view_botton_right"></div>
+			</div>
+			<div class="product_count_pages">
+				<volist name="pages" id="page" key="pages_k">
+					<span <if condition="$pages_k == 1">class="active"</if>></span>
+				</volist>
+			</div>
+			<script>
+			var i = 1;
+			var height_time_stop = false;
+			$(function(){
+				$('table').attr('width','99%');
+				$('table').attr('border','1');
+				<if condition="!stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+				$(".product_view_page_content").draggable({
+					appendTo:'product_view_page',
+					cursor: 'move',
+					axis:"y",
+					containment: 'parent'
+				});
+				var page_num = 0 - ({:count($pages)} - 1) * 370;
+				$('.product_view_page_box_big').width({:count($pages)} * 370);
+				<else/>
+				var page_num = 0 - ({:count($pages)} - 1) * 385;
+				$('.product_view_page_box_big').width({:count($pages)} * 385);
+				</if>
+				$('.product_view_botton_right').click(function(){
+					$(".product_view_page").stop(true,true);
+					if(i < {:count($pages)}){
+						height_time_stop = true;
+						<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+						$('.product_view_page_box_big').height($('.product_view_page_content').eq(i).height());
+						</if>
+						$('.product_view_page').animate({left:'-=370px'});
+						$('.product_count_pages span.active').removeClass('active').next().addClass('active');
+						++i;
+					}
+				});
+				$('.product_view_botton_left').click(function(){
+					$(".product_view_page").stop(true,true);
+					if(i > 1){
+						height_time_stop = true;
+						--i;
+						<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+						var s= i-1;
+						$('.product_view_page_box_big').height($('.product_view_page_content').eq(s).height());
+						</if>
+						$('.product_view_page').animate({left:'+=370px'});
+						$('.product_count_pages span.active').removeClass('active').prev().addClass('active');
+					}
+				});
+			})
+			
+			<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+			
+			var h_time = '';
+			function set_height(){
+				if(height_time_stop == false){
+					var s = i - 1;
+					$('.product_view_page_box_big').height($('.product_view_page_content').eq(s).height());
+					height_time = setTimeout('set_height()',h_time);
+					h_time+=200;
+				}
+			}
+			set_height();
+			</if>
+			</script>
+        </div>
+        <div class="clear"></div>
+    </div>
+	<if condition="!session('?member_id')">
+	<div class="tips">
+		<div class="w980">
+		<div class="tips_button">
+			<a class="down" href="javascript:void(0)"></a>
+			<a class="up" href="javascript:void(0)"></a>
+		</div>
+		<div class="tips_massage">
+			由于您尚未注册，请保存此文档的编辑链接，以便下次访问
+			<a class="copy_button" target="_blank" href="{$copylink}">{$copylink}</a>。否则关闭浏览器您将无法找回已创建说明书。我们建议您注册一个帐户，这样您已创建和编辑的文档将会保存到您的帐号内。
+		</div>
+		<div class="tips_botton"><a href="{:U('member/register')}" target="_blank">立即注册</a></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			setTimeout('no_register_tips()',2000);
+			$('.tips_button .up').click(function(){
+				$('.tips').css({height:25});
+				$('.tips_button .up').css({display:'none'});
+				$('.tips_button .down').css({display:'inline-block'});
+			});
+			$('.tips_button .down').click(function(){
+				$('.tips').css({height:''});
+				$('.tips_button .down').css({display:'none'});
+				$('.tips_button .up').css({display:'inline-block'});
+			});
+		});
+		function no_register_tips(){
+			$('.tips').slideDown(1500);
+		}
+		var unloadPageTip = function(){
+			return "直接离开将无法找回已创建说明书，请保存页面下方的编辑链接，以便找回和认领。";
+		};
+		window.onbeforeunload = unloadPageTip;
+	</script>
+	</if>
+	<div class="qrdownload" id="dialog-download" title="下载二维码">
+		<table class="table" style="text-align:center;">
+			<thead>
+				<tr>
+					<th>二维码大小</th>
+					<th>建议扫描距离(米)</th>
+					<th>下载链接</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>8cm</td>
+					<td>0.5m</td>
+					<td><a href="{:U('product/qrdownload','product_id='.$product['product_id'].'&act=download&qrsize=6')}"></a></td>
+				</tr>
+				<tr>
+					<td>12cm</td>
+					<td>0.8m</td>
+					<td><a href="{:U('product/qrdownload','product_id='.$product['product_id'].'&act=download&qrsize=9')}"></a></td>
+				</tr>
+				<tr>
+					<td>15cm</td>
+					<td>1.2m</td>
+					<td><a href="{:U('product/qrdownload','product_id='.$product['product_id'].'&act=download&qrsize=11')}"></a></td>
+				</tr>
+				<tr>
+					<td>30cm</td>
+					<td>1.8m</td>
+					<td><a href="{:U('product/qrdownload','product_id='.$product['product_id'].'&act=download&qrsize=24')}"></a></td>
+				</tr>
+			</tbody>
+		</table>
+		<p>*二维码尺寸请按照43像素的整数倍缩放，以保持最佳效果</p>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$(document).on("click","object",function (e){
+				e.preventDefault();
+			});
+			$(document).on("click","embed",function (e){
+				e.preventDefault();
+			});
+			$("#dialog-download").dialog({
+				autoOpen: false,
+				modal: true,
+				width: 800,
+				maxHeight:500,
+				position: ["center",100],
+				buttons: {
+					'关闭':function(){
+						$(this).dialog('close');
+					}
+				}
+			});
+			$('#qrpng_botton').click(function(){
+				$('#dialog-download').dialog('open');
+			});
+			
+			$('.return_index').click(function(){
+				var rel = $(this).attr('rel');
+				if(rel == 'index'){
+					<if condition="$copylink">
+						layer.alert('您未认领该说明书，请务必保存此说明书的编辑链接:'+'{$copylink}'+'，以便下次访问:-)', -1, function(){
+							location.href = '{:U("index/index")}';
+						});
+					<else />
+						location.href = '{:U("index/index")}';
+					</if>
+				}else{
+					$.get('{:U("member/islogin")}',function(data){
+						if(data.data == 1){
+							window.location.href="{:U('member/index')}";
+						}else{
+							var title = '您需要先注册一个帐号，才能为您创建根目录，现在就去注册么？';
+							var url = "{:U('member/register','','','',true)}";
+							layer.confirm(title,function(){
+								var w=window.open();
+								setTimeout(function(){ 
+									w.location=url; 
+								}, 500)
+								
+								return false;
+							});
+						}
+					});
+				}
+			});
+			
+			$('#earn_button').click(function(){
+				$.get('{:U("member/islogin")}',function(data){
+					if(data.data == 1){
+						//发送认领请求
+						$.get('{:U("member/earn",'product_id='.$_GET['product_id'].'&verify='.$_GET['verify'])}',function(data){
+							if(data.data == 1) {
+								layer.alert('恭喜你，认领成功', -1, function(){
+									window.location.href='{:U('member/index')}';
+								});
+							}else{
+								layer.msg(data.info, 1);
+							}
+						});
+					}else{
+						<if condition="$islogin">
+							var title = '时光流逝，您已登录超时,请重新登录后认领:-)';
+							var url = "{:U('member/login','','','',true)}";
+						<else />
+							$.layer({
+								shade: [0],
+								area: ['auto','auto'],
+								dialog: {
+									msg: '您需要登录帐号才能认领，现在就去注册么？',
+									btns: 2,                    
+									type: 4,
+									btn: ['去注册','去登录'],
+									yes: function(){
+										var w=window.open();
+										w.location = '{:U('member/register')}';
+									}, no: function(){
+										var w=window.open();
+										w.location = '{:U('member/login')}';
+									}
+								}
+							});
+						</if>
+					}
+				});
+			});
+		});
+	</script>
+	<if condition="session('?email')">
+		<script>
+
+			var a = 1;
+			function fn(){
+				if(a == 1){
+					$('#message_tips').css({color:'white'});
+					a = 0;
+				}else{
+					$('#message_tips').css({color:'#FF0000'});
+					a = 1;
+				}
+			}
+			var myInterval;
+
+			function message_tips(){
+				$.get("{:U('member/tips')}", function(data){
+					if(data.data > 0){
+						$("#message_tips").html('('+data.data+')');
+						$('#message_tips').css({color:'white'});
+						if(!myInterval)	myInterval = setInterval(fn,1000);
+					} else {
+						$("#message_tips").html('(0)');
+						if(data.data == 0){
+							$('#message_tips').css({color:'#1DB1AB'});
+							clearInterval(myInterval);
+						}
+					}
+				});
+				setTimeout('message_tips()',5000);
+			}
+			$(function(){
+				message_tips();
+			});
+		</script>
+	</if>
+	<include file="Public:feedback"/>
+</body>
+</html>

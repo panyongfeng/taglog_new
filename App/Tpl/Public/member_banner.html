@@ -1,0 +1,32 @@
+<div class="member_about">
+	<div class="avatar">
+		<div class="fr">
+			<if condition="$member['avatar']"><img src="{$member.avatar}"/><else /><img src="http://yhb360.qiniudn.com/images/avatar.png"/></if>
+		</div>
+	</div>
+	<div class="about_info">
+		<div class="user_about_info">
+			<div class="fr"><span>说明书总数：</span><span class="count">{$member.product_count}份</span> <a href="{:U('member/index')}"><span>管理</span></a></div>
+			<span class="user_nick">{$member.email}  &nbsp; </a></span>
+		</div>
+		<div class="user_count_info">
+			<div class="fr">上次登录时间：<span>{$member.last_login_time|date="Y-m-d H:i:s",###}</span></div>
+			
+			<if condition="$member['avatar']"><input name="check_logo" id="check_logo" type="checkbox" <if condition="$member['check_logo']">checked="checked"</if>vlaue="1"/>将此logo插入到二维码中</if>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$("#check_logo").click(function(){
+			var checked = $(this).prop("checked");
+			$.get('{:U("member/setqrlogo","checked=")}'+checked,function(data){
+				if(data.status != '1'){
+					layer.msg('设置失败了：网络异常，请稍后重试', 1);
+					$("#check_logo").prop("checked","");
+				}
+			});
+		});
+	});
+</script>

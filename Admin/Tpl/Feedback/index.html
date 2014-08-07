@@ -1,0 +1,138 @@
+<include file="Public:header" />
+<div class="container">
+	<!-- Docs nav ================================================== -->
+	<div class="page-header">
+		<h4>反馈列表</h4>
+	</div>
+	<include file="Public:alert" />
+	<p class="view"><b>视图：</b>
+	<img src=" __PUBLIC__/img/by_owner.png"/>  <a href="{:U('member/index')}" <if condition="$Think.get.by eq null">class="active"</if>>全部</a>  | 
+	<a href="{:U('member/index','by=today')}" <if condition="$Think.get.by eq 'today'">class="active"</if>>今日新增</a> | 
+	<a href="{:U('member/index','by=week')}" <if condition="$Think.get.by eq 'week'">class="active"</if>>本周新增</a> | 
+	<a href="{:U('member/index','by=month')}" <if condition="$Think.get.by eq 'month'">class="active"</if>>本月新增</a>
+	</p>
+	<div class="row">
+		<div class="span12">
+			<ul class="nav pull-left">
+				<li class="pull-left">
+					<a id="delete" class="btn" style="margin-right: 5px;"><i class="icon-remove"></i>删除</a>
+				</li>
+				<li class="pull-left">
+					<form class="form-inline" id="searchForm" onsubmit="return checkSearchForm()" action="" method="get">
+					<ul class="nav pull-left">
+						<li class="pull-left">
+							<select style="width:auto" name="field" id="field" onchange="changeCondition()">
+								<option class="word" value="content">内容</option>
+								<option class="word" value="email">邮箱</option>
+								<option class="date" value="create_time">反馈时间</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="conditionContent" class="pull-left">
+							<select id="condition" style="width:auto" name="condition" onchange="changeSearch()">					
+								<option value="contains">包含</option>
+								<option value="is">是</option>
+								<option value="start_with">开始字符</option>
+								<option value="end_with">结束字符</option>
+								<option value="is_empty">为空</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="searchContent" class="pull-left">
+							<input id="search" type="text" class="input-medium search-query" value="{$Think.get.search}" name="search"/>&nbsp;&nbsp;
+						</li>
+						<li class="pull-left">
+							<input type="hidden" name="m" value="feedback"/>
+							<if condition="$Think.get.by neq null"><input type="hidden" name="by" value="{$Think.get.by}"/></if>
+							<button type="submit" class="btn"> <img src="__PUBLIC__/img/search.png"/>  搜索</button>
+						</li>
+					</ul>
+					</form>
+				</li>
+			</ul>
+		</div>
+		<div class="span12">
+			<form id="form1" method="post">
+				<table class="table table-hover table-striped"> 
+					<thead> 
+						<tr>
+							<th><input type="checkbox" id="check_all"/></th>
+							<th>邮箱</th>
+							<th width="40%">内容</th>
+							<th>反馈人</th>
+							<th>
+								<a title="升序" href="{:U('feedback/index','order=ct_up&'.$parameter)}"><i <if condition="$_GET['order'] == 'rt_up'">style="color:#FF780F;"</if> class="icon-arrow-up"></i></a> 
+								反馈时间
+								<a title="降序" href="{:U('feedback/index','order=ct_down&'.$parameter)}"><i <if condition="$_GET['order'] == 'rt_down'">style="color:#FF780F;"</if> class="icon-arrow-down"></i></a>
+							</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr><td colspan="7">{$page}</td></tr>
+					</tfoot>
+					<tbody>
+						<if condition="$memberlist eq null">
+							<tr><td colspan="6">----暂无数据！----</td></tr>
+						<else/>
+							<volist name="memberlist" id="vo">
+								<tr>
+									<td><input name="feedback_id[]" class="check_list" type="checkbox" value="{$vo.feedback_id}"/></td>
+									<td>{$vo.email}</td>
+									<td>{$vo.content}</td>
+									<td><if condition="$vo['member']['name']"><a href="javascript:void(0)" class="member_info" rel="{$vo.member.member_id}">{$vo.member.name}</a><elseif condition="$vo['member']['email']" /><a href="javascript:void(0)" class="member_info" rel="{$vo.member.member_id}">{$vo['member']['email']}</a><else/>游客</if></td>
+									<td><if condition="$vo['create_time'] gt 0">{$vo.create_time|date="Y-m-d H:i",###}</if></td>
+									</td>
+								</tr>
+							</volist>
+						</if>
+					</tbody>
+					
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="hide" id="dialog-role-info" title="商家信息">loading...</div>
+<script type="text/javascript">
+$("#dialog-role-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	maxHeight: 800,
+	position: ["center",100]
+});
+$(function(){
+	$("#check_all").click(function(){
+		$("input[class='check_list']").prop('checked', $(this).prop("checked"));
+	});
+	<if condition="$Think.get.field neq null">
+		$("#field option[value='{$Think.get.field}']").prop("selected", true);changeCondition();
+		$("#condition option[value='{$Think.get.condition}']").prop("selected", true);changeSearch();
+		$("#search").prop('value', '{$Think.get.search}');
+	</if>
+	$(".disable").click(
+		function(){
+			var member_id = $(this).attr('rel');
+			$.get('{:U("member/disablemember")}' + '&member_id=' +member_id,function(data){
+				if (data.status == '1') {
+					$("#disable"+member_id).html('<font color="red">停用</font>');
+				} else if (data.status == '2') {
+					$("#disable"+member_id).html('<font color="red">启用</font>');
+				} else {
+					alert(data.info);
+				}
+			});
+		}
+	);
+	$('#delete').click(function(){
+		if(confirm('你确定要删除,删除后将进入回收站!')){
+			$("#form1").attr('action', '{:U("feedback/delete")}');
+			$("#form1").submit();
+		}
+	});
+	$(".member_info").click(function(){
+		$role_id = $(this).attr('rel');
+		$('#dialog-role-info').dialog('open');
+		$('#dialog-role-info').load('{:U("member/dialoginfo","id=")}'+$role_id);
+	});
+});
+</script>
+<include file="Public:footer" />

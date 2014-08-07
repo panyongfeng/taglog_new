@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="./favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<link type="text/css" href="http://yhb360.qiniudn.com/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="http://yhb360.qiniudn.com/css/uploadify.css">
+<link rel="stylesheet" type="text/css" href="http://yhb360.qiniudn.com/css/jquery.Jcrop.min.css" media="all">
+<script type="text/javascript">
+	var browserInfo = {browser:"", version: ""};
+	var ua = navigator.userAgent.toLowerCase();
+	if (window.ActiveXObject) {
+		browserInfo.browser = "IE";
+		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
+		if(browserInfo.version <= 7){
+			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
+			location.href = 'http://chrome.360.cn/';
+		}
+	}
+</script>
+<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery.uploadify.min.js" type="text/javascript"></script>
+<script src="http://yhb360.qiniudn.com/js/layer/layer.min.js"></script>
+<script type="text/javascript" src="http://yhb360.qiniudn.com/js/jquery.Jcrop.min.js"></script>
+
+</head>
+<body class="no_index">
+    <include file="Public:top"/>
+    <div class="naver">
+         <div class="w980">
+            <a href="{:U('index/index')}" >首页</a> &gt;
+            <a href="{:U('member/home')}" >商家中心</a>
+        </div>
+    </div>
+    <div class="w980 main_table">
+		<div class="member_box">
+			<include file="Public:member_banner"/>
+			<div class="member_info">
+				<ul class="info_name">
+					<li><a href="{:U('member/home')}">商家资料</a></li>
+					<li class="active"><a href="{:U('member/home','act=avatar')}">设置logo</a></li>
+					<li><a href="{:U('member/home','act=message')}">站内通知<if condition="$message_alert_count gt 0"><span style="color: red;">({$message_alert_count})</span></if></a></li>
+					<li><a href="{:U('member/home','act=resetpassword')}">修改密码</a></li>
+				</ul>
+				<div class="info_box">
+					<!-- 修改头像 -->
+					<form action="{:U('member/saveavatar')}" method="post" id="pic" class="update-pic cf">
+						<div style="padding-bottom: 20px;color: #BE3641;">
+						*强烈建议您上传公司logo，这样可以自动将logo插入二维码中</div>
+						<div class="upload-area">
+							<input type="file" id="user-pic">
+							<div class="file-tips">支持JPG,PNG，图片小于<span style="font-style: italic;color: #BE3641;">1MB</span>，尺寸不小于<span style="font-style: italic;  color: #BE3641;">100*100 px</span>！</div>
+							<div class="preview hidden" id="preview-hidden"></div>
+						</div>
+						<div class="preview-area">
+							<input type="hidden" id="x" name="x" />
+							<input type="hidden" id="y" name="y" />
+							<input type="hidden" id="w" name="w" />
+							<input type="hidden" id="h" name="h" />
+							<input type="hidden" id='img_src' name='src'/>
+							<div class="tcrop">logo预览</div>
+							<div class="crop crop100"><img id="crop-preview-100" src="" alt=""></div>
+							<div class="crop crop60"><img id="crop-preview-60" src="" alt=""></div>
+							<a class="uppic-btn save-pic" href="javascript:void(0);">保存</a>
+							<a class="uppic-btn reupload-img" href="javascript:$('#user-pic').uploadify('cancel','*');">重新上传</a>
+						</div>
+					</form>
+					<!-- /修改头像 -->
+				</div>
+			</div>
+		</div>
+    </div>
+	<include file="Public:feedback"/>
+	<script type="text/javascript">
+		$(function(){
+			//上传头像(uploadify插件)
+			$("#user-pic").uploadify({
+				'queueSizeLimit' : 1,
+				'removeTimeout' : 0.5,
+				'preventCaching' : true,
+				'fileSizeLimit' : '1MB',
+				'multi'    : false,
+				'swf' 			: './js/uploadify.swf',
+				'uploader' 		: '{:U("member/uploadimg")}',
+				'buttonText' 	: '<i class="userup-icon"></i>上传logo',
+				'overrideEvents': ["onSelectError","onDialogClose","onUploadError","onCancel"],
+				'width' 		: '200',
+				'height' 		: '200',
+				'fileTypeExts'	: '*.jpg; *.png; *.gif;',
+				'onSelect': function(file){
+					if(file.size > 1024000){
+						layer.alert('选择图片超过1M，请重新选择小于1M的图片！',-1);
+						$('#user-pic').uploadify('cancel','*');
+					}
+				},
+				'onSelectError': function(file){
+					if(file.size > 1024000){
+						layer.alert('选择图片超过1M，请重新选择小于1M的图片！',-1);
+						$('#user-pic').uploadify('cancel','*');
+					}
+				},
+				'onUploadSuccess' : function(file, data, response){
+					var data = $.parseJSON(data);
+					if(data['status'] == 0){
+						layer.alert(data['info'], -1);
+						return;
+					}
+					layer.load('正在努力加载', 0);
+					var preview = $('.upload-area').children('#preview-hidden');
+					preview.show().removeClass('hidden');
+					//两个预览窗口赋值
+					$('.crop').children('img').attr('src',data['data']+'?random='+Math.random());
+					//隐藏表单赋值
+					$('#img_src').val(data['data']);
+					//绑定需要裁剪的图片
+					var img = $('<img />');
+					preview.append(img);
+					preview.children('img').attr('src',data['data']+'?random='+Math.random());
+					var crop_img = preview.children('img');
+					crop_img.attr('id',"cropbox").show();
+					var img = new Image();
+					img.src = data['data']+'?random='+Math.random();
+					//根据图片大小在画布里居中
+					img.onload = function(){
+						var img_height = 0;
+						var img_width = 0;
+						var real_height = img.height;
+						var real_width = img.width;
+						if(real_height > real_width && real_height > 200){
+							var persent = real_height / 200;
+							real_height = 200;
+							real_width = real_width / persent;
+						}else if(real_width > real_height && real_width > 200){
+							var persent = real_width / 200;
+							real_width = 200;
+							real_height = real_height / persent;
+						}
+						if(real_height < 200){
+							img_height = (200 - real_height)/2;	
+						}
+						if(real_width < 200){
+							img_width = (200 - real_width)/2;
+						}
+						preview.css({width:(200-img_width)+'px',height:(200-img_height)+'px'});
+						preview.css({paddingTop:img_height+'px',paddingLeft:img_width+'px'});
+						layer.closeAll();				
+					}
+					//裁剪插件
+					$('#cropbox').Jcrop({
+						bgColor:'#333',   //选区背景色
+						bgFade:true,      //选区背景渐显
+						fadeTime:1000,    //背景渐显时间
+						allowSelect:false, //是否可以选区，
+						allowResize:true, //是否可以调整选区大小
+						aspectRatio: 1,     //约束比例
+						minSize : [100,100],//可选最小大小
+						boxWidth : 200,		//画布宽度
+						boxHeight : 200,	//画布高度
+						onChange: showPreview,//改变时重置预览图
+						onSelect: showPreview,//选择时重置预览图
+						setSelect:[ 0, 0, 100, 100],//初始化时位置
+						onSelect: function (c){	//选择时动态赋值，该值是最终传给程序的参数！
+							$('#x').val(c.x);//需裁剪的左上角X轴坐标
+							$('#y').val(c.y);//需裁剪的左上角Y轴坐标
+							$('#w').val(c.w);//需裁剪的宽度
+							$('#h').val(c.h);//需裁剪的高度
+					  }
+					});
+					//提交裁剪好的图片
+					$('.save-pic').click(function(){
+						if($('#preview-hidden').html() == ''){
+							//layer.alert('请先上传图片:-)',-1);
+							alert('请先上传图片:-)');
+						}else{
+							//alert('图片处理中，请稍候……');
+							$('#pic').submit();
+						}
+					});
+					//重新上传,清空裁剪参数
+					var i = 0;
+					$('.reupload-img').click(function(){
+						$('#preview-hidden').find('*').remove();
+						$('#preview-hidden').hide().addClass('hidden').css({'padding-top':0,'padding-left':0});
+					});
+				 }
+			});
+			//预览图
+			function showPreview(coords){
+				var img_width = $('#cropbox').width();
+				var img_height = $('#cropbox').height();
+				  //根据包裹的容器宽高,设置被除数
+				  var rx = 100 / coords.w;
+				  var ry = 100 / coords.h; 
+				  $('#crop-preview-100').css({
+					width: Math.round(rx * img_width) + 'px',
+					height: Math.round(ry * img_height) + 'px',
+					marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+					marginTop: '-' + Math.round(ry * coords.y) + 'px'
+				  });
+				  rx = 60 / coords.w;
+				  ry = 60 / coords.h;
+				  $('#crop-preview-60').css({
+					width: Math.round(rx * img_width) + 'px',
+					height: Math.round(ry * img_height) + 'px',
+					marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+					marginTop: '-' + Math.round(ry * coords.y) + 'px'
+				  });
+			}
+		})
+		
+	</script>
+</body>
+
+</html>

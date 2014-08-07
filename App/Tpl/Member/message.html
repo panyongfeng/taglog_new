@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="./favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<link type="text/css" href="http://yhb360.qiniudn.com/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+<script type="text/javascript">
+	var browserInfo = {browser:"", version: ""};
+	var ua = navigator.userAgent.toLowerCase();
+	if (window.ActiveXObject) {
+		browserInfo.browser = "IE";
+		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
+		if(browserInfo.version <= 7){
+			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
+			location.href = 'http://chrome.360.cn/';
+		}
+	}
+</script>
+<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/layer/layer.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
+</head>
+<body class="no_index">
+    <include file="Public:top"/>
+    <div class="naver">
+         <div class="w980">
+            <a href="{:U('index/index')}" >首页</a> &gt;
+            <a href="{:U('member/home')}" >商家中心</a>
+        </div>
+    </div>
+    <div class="w980 main_table">
+		<div class="member_box">
+			<include file="Public:member_banner"/>
+			<div class="member_info">
+				<ul class="info_name">
+					<li><a href="{:U('member/home')}">商家资料</a></li>
+					<li><a href="{:U('member/home','act=avatar')}">设置logo</a></li>
+					<li class="active">
+						<a href="{:U('member/home','act=message')}">站内通知<if condition="$message_alert_count gt 0"><span style="color: red;">({$message_alert_count})</span></if></a>
+					</li>
+					<li><a href="{:U('member/home','act=resetpassword')}">修改密码</a></li>
+				</ul>
+				<div class="info_box">
+					<volist name="message_list" id="vo">
+					<div class="message_box">
+						<div rel="{$vo.message_id}"  <if condition="$vo['read_time'] gt $vo['create_time']">class="message_title open"<else/>class="message_title"</if>>
+							<span>2014-06-19</span>
+							<a href="javascript:void(0);">{$vo.content|msubstr=###, 0 ,30}</a>
+						</div>
+						<div class="message_content">
+							{$vo.content}
+						</div>
+						<div class="message_footer"><span>2014-06-19</span><a href="javascript:void(0);" rel="{$vo.message_id}" class="message_delete">删除</a></div>
+						<a class="up_button" href="javascript:void(0);"></a>
+					</div>
+					</volist>
+				</div>
+				<script>
+				$(function(){
+					$('.message_title').click(function(){
+						$.get('{:U("member/openmessage","message_id=")}' + $(this).attr('rel'),function(data){});
+						$('.message_title').show().siblings().hide();
+						$(this).addClass('open');
+						$(this).hide().siblings().show();
+					});
+					$('.up_button').click(function(){
+						$(this).hide().siblings().hide().siblings('.message_title').show();
+					});
+					$('.message_delete').click(function(){
+						var obj = $(this);
+						layer.confirm('您确定删除该条信息么？',function(){
+							$.get('{:U("member/deletemessage","message_id=")}' + obj.attr('rel'),function(data){
+								if(data.status == 1){
+									obj.parent().parent().remove();
+									layer.msg("删除成功",1,1);
+								}else{
+									layer.alert(data.info,-1);
+								}
+							})
+						})
+					});
+				})
+					
+					
+				</script>
+			</div>
+		</div>
+    </div>
+	<include file="Public:feedback"/>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<div class="top">
+	<div class="w980">
+		<div class="login">
+			<if condition="session('?email')">
+			<a title="个人中心" href="{:U('member/home')}">{:session('email')}&nbsp;<font id="message_tips" color="#1DB1AB">(0)</font></a>
+			<span><a href="{:U('member/index')}">我的说明书</a></span>
+			<a href="{:U('member/logout')}">退出</a>
+			<else/>
+			<span><a href="{:U('member/login')}">登录</a></span>
+			<a href="{:U('member/register')}">注册</a>
+			</if>
+		</div>
+		<a href="{:U('index/index')}" style="float:left"><img src="http://yhb360.qiniudn.com/images/logo.png" class="logo"></a>
+	</div>
+</div>
+<if condition="session('?member_id')">
+<script>
+
+	var a = 1;
+	function fn(){
+		if(a == 1){
+			$('#message_tips').css({color:'white'});
+			a = 0;
+		}else{
+			$('#message_tips').css({color:'#FF0000'});
+			a = 1;
+		}
+	}
+	var myInterval;
+
+	function message_tips(){
+		$.get("{:U('member/tips')}", function(data){
+			if(data.data > 0){
+				$("#message_tips").html('('+data.data+')');
+				$('#message_tips').css({color:'white'});
+				if(!myInterval)	myInterval = setInterval(fn,1000);
+			} else {
+				$("#message_tips").html('(0)');
+				if(data.data == 0){
+					$('#message_tips').css({color:'#1DB1AB'});
+					clearInterval(myInterval);
+				}
+			}
+		});
+		setTimeout('message_tips()',5000);
+	}
+	$(function(){
+		message_tips();
+	});
+</script>
+</if>

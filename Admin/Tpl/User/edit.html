@@ -1,0 +1,38 @@
+<include file="Public:header" />
+<div class="container">
+	<!-- Docs nav ================================================== -->
+	<div class="page-header">
+		<h4>用户信息</h4>
+	</div>
+	<div class="row">
+		<div class="span12">
+			<include file="Public:alert" />
+		</div>
+		<div class="span12">
+			<form class="form-horizontal" action="{:U('user/edit')}" method="post" >
+				<table class="table span7">
+					<tfoot>
+						<tr>
+							<td>&nbsp;</td>
+							<td><input name="submit" class="btn btn-primary" type="submit" value="保存"/> &nbsp;<input class="btn" type="button" onclick="javascript:history.go(-1)" value="取消"/></td>
+						</tr>
+					</tfoot>
+					<tbody>
+						<tr>
+							<th colspan="2">基本信息</th>
+						</tr>
+						<tr>
+							<td class="tdleft">员工名</td>
+							<td>{$user.name}</td>
+						</tr>
+						<tr>
+							<td class="tdleft">修改密码请输入：</td>
+							<td><input class="text-input small-input" type="text" name="password" id="password" value=""/></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>			
+		</div> <!-- End #tab1 -->		
+	</div> <!-- End #main-content -->	
+</div>
+<include file="Public:footer" />	

@@ -1,0 +1,264 @@
+<include file="Public:header" />
+<div class="container">
+	<!-- Docs nav ================================================== -->
+	<div class="page-header">
+		<h4>视频列表</h4>
+	</div>
+	<ul class="nav nav-tabs">
+		<li <if condition="!$_GET['content']">class="active"</if>><a  href="{:U('video/index')}"><img src="__PUBLIC__/img/customer_icon.png"/>&nbsp; 所有数据</a></li>
+		<li <if condition="$_GET['content'] == 'free' "> class="active" </if>><a  href="{:U('video/index','content=free')}"><img src="__PUBLIC__/img/customer_source_icon.png"/>&nbsp; 疑为垃圾数据</a></li>
+	</ul>
+	<include file="Public:alert" />
+	<div class="row">
+		<div class="span12">
+			<ul class="nav pull-left">
+				<li class="pull-left">
+					<a id="delete_btn" class="btn" style="margin-right: 5px;"><i class="icon-remove"></i>删除</a>
+				</li>
+				<li class="pull-left">
+					<form class="form-inline" id="searchForm" onsubmit="return checkSearchForm();" action="" method="get">
+					<ul class="nav pull-left">
+						<li class="pull-left">
+							<select style="width:auto" name="field" id="field" onchange="changeCondition()">
+								<option class="word" value="vid">vid</option>
+								<option class="date" value="update_time">更新时间</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="conditionContent" class="pull-left">
+						<select id="condition" style="width:auto" name="condition" onchange="changeSearch()">					
+								<option value="contains">包含</option>
+								<option value="is">是</option>
+								<option value="start_with">开始字符</option>
+								<option value="end_with">结束字符</option>
+								<option value="is_empty">为空</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="searchContent" class="pull-left">
+							<input id="search" type="text" class="input-medium search-query" value="{$Think.get.search}" name="search"/>&nbsp;&nbsp;
+						</li>
+						<li class="pull-left">
+							<input type="hidden" name="m" value="video"/>
+							<if condition="$Think.get.by"><input type="hidden" name="by" value="{$Think.get.by}"/></if>
+							<if condition="$Think.get.content"><input type="hidden" name="content" value="{$Think.get.content}"/></if>
+							<button type="submit" class="btn"> <img src="__PUBLIC__/img/search.png"/>  搜索</button> &nbsp; &nbsp;
+						</li>
+						
+						<li class="pull-left">
+							<a class="btn" id="update_data" href="javascript:void(0)"><i class="icon-repeat"></i>  检查平台垃圾视频</a>
+						</li>
+					</ul>
+					</form>
+				</li>
+			</ul>
+		</div>
+		<div class="span12">
+			<form id="form1" action="{:U('video/delete')}" method="post">
+				<table class="table table-hover table-striped"> 
+					<thead> 
+						<tr>
+							<th width="5%"><input type="checkbox" id="check_all"/></th>
+							<th width="15%">视频id</th>
+							<th width="15%">状态</th>
+							<th width="10%">
+								<a title="升序" href="{:U('video/index','order=ut_up&'.$parameter)}"><i <if condition="$_GET['order'] == 'ut_up'">style="color:#FF780F;"</if> class="icon-arrow-up"></i></a> 
+								更新时间
+								<a title="降序" href="{:U('video/index','order=ut_down&'.$parameter)}"><i <if condition="$_GET['order'] == 'ut_down'">style="color:#FF780F;"</if> class="icon-arrow-down"></i></a>
+							</th>
+							<th width="10%">
+								视频接口回调时间
+							</th>
+							<if condition="$_GET['content'] != 'free'"><th width="15%">
+								说明书
+							</th></if>
+							<th width="10%">
+								上传人
+							</th>
+							<th width="10%">操作</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr><if condition="!$_GET['content']"><td colspan="9"><else /><td colspan="8"></if>
+							<span style="background-color: #f2dede;width: 63px;height: 21px;display: inline-block;"></span> 保利威视没有系统有 &nbsp; <span style="background-color: #faf2cc;width: 63px;height: 21px;display: inline-block;"></span>保利威视有系统没有</tr>
+						<tr><if condition="!$_GET['content']"><td colspan="9">{$page}</td><else /><td colspan="8">{$page}</td></if></tr>
+						
+					</tfoot>
+					<tbody>
+						<if condition="$videolist eq null">
+							<tr>
+								<if condition="!$_GET['content']">
+									<td colspan="9">----暂无数据！----</td>
+								<else />
+									<td colspan="8">----暂无数据！----</td>
+								</if>
+							</tr>
+						<else/>
+							<volist name="videolist" id="vo">
+								<!-- in_polyv=1 系统有保利威视有 in_polyv=0保利威视没有系统有 is_updated保利威视有系统没有  -->
+								<tr <if condition="$_GET['content'] == 'free'">
+									<if condition="$vo['in_polyv'] == 0">class="error"
+									<elseif condition="$vo['is_updated'] == 1" />class="warning"
+									</if>
+									</if>>
+									<td><input name="video_id[]" class="check_list" type="checkbox" value="{$vo.vid}"/></td>
+									<td>{$vo.vid}</td>
+									<td><if condition="$vo['status'] == 1">审核通过<elseif condition="$vo['status'] == 2"/>审核没有通过<elseif condition="$vo['status'] == 3"/>已删除<else />未审核</if></td>
+									<td><if condition="$vo['update_time'] gt 0">{$vo.update_time|date="Y-m-d H:i",###}</if></td>
+									<td>
+									<if condition="$vo['call_type_time'] gt 0">{$vo.call_type_time|date="Y-m-d H:i",###}</if></td>
+									<if condition="$_GET['content'] != 'free'">
+										<td width="15%">
+											<if condition="!empty($vo['product'])"><a href=" prd/{$vo.product_id}" title="{$vo.product.name}" target="_blank">{$vo.product.name|msubstr=0,19}</a><else />暂无信息</if>
+										</td>
+									</if>
+									<td>
+										<if condition="!empty($vo['member'])">
+											<a href="javascript:void(0)" class="member_info" rel="{$vo.member.member_id}">{$vo.member.short_name|default=$vo['member']['email']}</a>
+										<else />暂无信息</if>
+									</td>
+									<td>
+										<a target="_blank" class="showvideo" rel="{$vo['vid']}" href="javascript:void(0)">查看</a>
+										<a target="_blank" class="deletevideo" rel="{$vo['vid']}" href="javascript:void(0)">删除</a>
+									</td>
+								</tr>
+							</volist>
+						</if>
+					</tbody>
+					
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="hide" id="dialog-role-info" title="商家信息">loading...</div>
+<div class="hide" id="dialog-delete-info" title="视频删除">
+	<p id="delete_info"></p>
+</div>
+<div class="hide" id="dialog-update-info" title="垃圾视频检查">
+	<p id="update_info"></p>
+</div>
+<div class="hide" id="dialog-video-info" title="查看视频">
+	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" height="500" width="620" id="polyvplayer{$file.vid}"><PARAM id="video_src" NAME=movie VALUE="http://player.polyv.net/videos/{$file.vid}.swf"><param name="allowscriptaccess" value="always"><param name="wmode" value="opaque"><param name="allowFullScreen" value="true" /><EMBED id="video_player" src="http://player.polyv.net/videos/{$file.vid}.swf" width="620" height="500" TYPE="application/x-shockwave-flash" allowscriptaccess="always" wmode="opaque" name="polyvplayer{$file.vid}" allowFullScreen="true" /></EMBED></OBJECT>
+</div>
+<script type="text/javascript">
+$("#dialog-role-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	maxHeight: 800,
+	position: ["center",100]
+});
+$("#dialog-delete-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	maxHeight: 600,
+	position: ["center",100],
+	buttons: {
+		"Ok": function () {
+			$(this).dialog("close");
+		}
+	}
+});
+$("#dialog-update-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	maxHeight: 600,
+	position: ["center",100],
+	buttons: {
+		"Ok": function () {
+			$(this).dialog("close");
+			location.reload();
+		}
+	}
+});
+$("#dialog-video-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	height: 600,
+	position: ["center",100]
+});
+$(function(){
+<if condition="$Think.get.field neq null">
+	$("#field option[value='{$Think.get.field}']").prop("selected", true);changeCondition();
+	$("#condition option[value='{$Think.get.condition}']").prop("selected", true);changeSearch();
+	$("#search").prop('value', '{$Think.get.search}');
+</if>
+	$("#check_all").click(function(){
+		$("input[class='check_list']").prop('checked', $(this).prop("checked"));
+	});
+	
+	$("#delete_btn").click(function(){
+		
+		var id_array = new Array();
+		$("input[class='check_list']:checked").each(function(){  
+			id_array.push($(this).val());
+		});
+		if(id_array.length == 0){
+			alert('请选择要删除的视频！');
+		}else{
+			$("#dialog-delete-info").dialog('open');
+			$('#delete_info').nextAll().remove();
+			for(var key in id_array){
+				$.get('{:U("video/delete")}' + '&vid=' +id_array[key],function(data){
+					if (data.status == '1') {
+						$("input[value="+data.data+"]").parent().parent().remove();
+						$('#delete_info').after('<h4 style="color:green;">视频:'+data.data+'--删除成功！</h4>');
+					} else {
+						$('#delete_info').after('<h4 style="color:red;">视频:'+data.data+'--删除失败！</h4>');
+					}
+				});
+			}
+		}
+	});
+	
+	function update_list(page_num){
+		$.get('{:U("video/update")}' + '&page_num='+page_num,function(data){
+			$('#update_info').after('<h4 style="color:green;">'+data.info+'   更新成功！</h4>');
+			if (data.status == '1') {
+				update_list(data.data.nexpage);
+			}else{
+				return;
+			}
+		});
+	}
+	
+	$("#update_data").click(function(){
+		$("#dialog-update-info").dialog('open');
+		$('#delete_info').nextAll().remove();
+		update_list(1);
+	});
+
+	$('.deletevideo').click(function(){
+		var swf_vid = $(this).attr('rel');
+		if(confirm('你确定要删除,此操作不可恢复，删除后将归入视频管理后台回收站!')){
+			$.get('{:U("video/delete")}' + '&vid=' +swf_vid,function(data){
+				if (data.status == '1') {
+					$("input[value="+data.data+"]").parent().parent().remove();
+				} else {
+					$('#delete_info').after('<h4 style="color:red;">视频:'+data.data+'--删除失败！</h4>');
+					alert('删除失败!');
+				}
+			});
+		}
+	});
+	
+	$(".member_info").click(function(){
+		$role_id = $(this).attr('rel');
+		$('#dialog-role-info').dialog('open');
+		$('#dialog-role-info').load('{:U("member/dialoginfo","id=")}'+$role_id);
+	});
+	
+	$(".showvideo").click(function(){
+		var swf_path = $(this).attr('rel');
+		var video_src = "http://player.polyv.net/videos/"+swf_path+".swf";
+		
+		$("#video_src").attr('VALUE', video_src);
+		$("#video_player").attr('src', video_src);
+		$('#dialog-video-info').dialog('open');
+		return false;
+	});
+});
+</script>
+<include file="Public:footer" />

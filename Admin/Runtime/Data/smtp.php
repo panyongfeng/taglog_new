@@ -1,0 +1,1 @@
+<?php	return array ( 'name' => 'smtp', 'value' => 'a:9:{s:12:"MAIL_ADDRESS";s:16:"admin@yhb360.com";s:9:"MAIL_SMTP";s:15:"smtp.ym.163.com";s:9:"MAIL_PORT";s:2:"25";s:14:"MAIL_LOGINNAME";s:16:"admin@yhb360.com";s:13:"MAIL_PASSWORD";s:9:"taglogsms";s:11:"MAIL_SECURE";N;s:12:"MAIL_CHARSET";s:5:"UTF-8";s:9:"MAIL_AUTH";b:1;s:9:"MAIL_HTML";b:1;}', );?>

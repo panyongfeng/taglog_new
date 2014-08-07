@@ -1,0 +1,84 @@
+<div class="feedback">
+	<div class="feedback_content" style="padding:10px;height:auto">
+		<div class="feedback_title">在线客服</div>
+		<div class="feedback_content_box" style="display:none">
+			<textarea id="feedback_content">在这里留下您的意见</textarea>
+			<div class="feedback_email_box">
+				<input type="submit" id="sub_feedback" value="提交反馈"/>
+				<input type="text" id="feedback_email" value="请输入您的邮箱"/>
+			</div>
+		</div>
+		<a href="http://kefu6.kuaishang.cn/bs/im.htm?cas=13003___383498&fi=13063" style="display:block;margin:10px 0 15px;" target=_blank><img src="__PUBLIC__/img/kefu1.jpg" border='0' /></a>
+		<a href="http://kefu6.kuaishang.cn/bs/im.htm?cas=13001___254766&fi=13061" style="display:block;margin:10px 0;" target=_blank><img src="__PUBLIC__/img/kefu2.jpg" border='0' /></a>
+	</div>
+	<div class="feedback_button"></div>
+</div>
+<script type="text/javascript" src="http://kefu6.kuaishang.cn/bs/ks.j?cI=383498&fI=13063" charset="utf-8"></script>
+<script>
+	$(function(){
+		$('#feedback_email').focus(function(){
+			if($(this).val() == '请输入您的邮箱')	$(this).val('');
+		}).blur(function(){
+			if(!$(this).val())	$(this).val('请输入您的邮箱');
+		});
+		$('#feedback_content').focus(function(){
+			if($(this).val() == '在这里留下您的意见')	$(this).val('');
+		}).blur(function(){
+			if(!$(this).val())	$(this).val('在这里留下您的意见');
+		});
+		var menuYloc = $(".feedback").offset().top; 
+		$(window).scroll(function (){ 
+			var offsetTop = menuYloc + $(window).scrollTop() +"px"; 
+			$(".feedback").animate({top : offsetTop },{ duration:600 , queue:false }); 
+		}); 
+		$(".feedback_button").mouseenter(function(){
+			$(this).hide();
+			$(".feedback").width(120);
+			$(".feedback_content").show();
+		});
+		$('#feedback_close').click(function(){
+			$(".feedback").width(46);
+			$(".feedback_content").hide();
+			$(".feedback_button").show();
+		});
+		$(".feedback").mouseleave(function(){
+			if(($("#feedback_content").val() == '' || $("#feedback_content").val() == '在这里留下您的意见') && ($("#feedback_email").val() == '' || $("#feedback_email").val() == '请输入您的邮箱')){
+				$(".feedback").width(46);
+				$(".feedback_content").hide();
+				$(".feedback_button").show();
+			}
+		});
+		$("*[class!=feedback]").click(function(){
+			if(($("#feedback_content").val() == '' || $("#feedback_content").val() == '在这里留下您的意见') && ($("#feedback_email").val() == '' || $("#feedback_email").val() == '请输入您的邮箱')){
+				$(".feedback").width(46);
+				$(".feedback_content").hide();
+				$(".feedback_button").show();
+			}
+		});
+		$('#sub_feedback').click(function(){
+			var content = $('#feedback_content').val();
+			var email = $('#feedback_email').val();
+			if(content != '在这里留下您的意见'){
+				$.post('{:U("member/feedback")}',{content : content, email : email},function(data){
+					if(data.status == '1'){
+						layer.alert(data.info,-1);
+						$("#feedback_content").val('');
+						$("#feedback_email").val('');
+						$(".feedback").width(46);
+						$(".feedback_content").hide();
+						$(".feedback_button").show();
+					}else{
+						layer.alert(data.info,-1);
+					}
+				});
+			} else {
+				layer.alert('您忘记写反馈的内容了！',-1);
+			}
+		});
+	});
+	
+	//百度统计
+	var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+	document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F287083f19481e4a2a0e7db232e8085cc' type='text/javascript'%3E%3C/script%3E"));
+	
+</script>

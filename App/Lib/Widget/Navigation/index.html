@@ -1,0 +1,150 @@
+<div class="nav-collapse collapse">
+	<ul class="nav"> 
+		<volist name="top" id="vo">
+			<if condition="$vo.title neq ''">
+			<li <if condition="strtolower(MODULE_NAME) eq strtolower($vo['module'])">class="active"</if>><a  href="{$vo.url}">{$vo.title}</a></li>
+			</if>
+		</volist>				
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">{:L('MORE')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<volist name="more" id="vo">
+					<if condition="$vo.title neq ''">
+					<li><a href="{$vo.url}">{$vo.title}</a></li>
+					</if>
+				</volist>
+				<li class="divider"></li>
+				<li><a href="{:U('navigation/index')}">{:L('MENU_SETTINGS')}</a></li>
+			</ul>
+		</li>	
+	</ul>
+	<ul class="nav pull-right">
+		<li style=" width: auto;margin-right: 5px;"><a  style="padding: 10px 0px;width: auto;color:#9fc71c"><i class="icon-user"></i>{$Think.session.name}</a></li>
+		<li style=" width: 30px; "><a  style="padding: 10px 0px; width: 70px; " href="{:U('message/index')}" title="{:L('NEW_MESSAGE')}"><span id="message_tips" style="color:#fff;"><i class="icon-envelope"></i> <span id="message_num">0</span> </span></a></li>
+		<li style=" width: 30px; "><a  style="padding: 10px 0px; width: 70px; " href="{:U('task/index', 'by=me')}" title="{:L('MY_TASK')}"><span id="task_tips" style="color:#fff;"><i class="icon-tasks"></i> <span id="task_num">0</span> </span></a></li>
+		<li style=" width: 30px; "><a  style="padding: 10px 0px; width: 70px; " href="{:U('event/index','by=me')}" title="{:L('TODAY_SCHEDULE')}"><span id="event_tips" style="color:#fff;"><i class="icon-screenshot"></i> <span id="event_num">0</span> </span></a></li>
+		<li style=" width: 30px; "><a  style="padding: 10px 0px; width: 70px; " href="{:U('contract/index','by=me')}" title="{:L('CONTRACT_EXPIRES_REMIND')}"><span id="contract_tips" style="color:#fff;"><i class="icon-star-empty"></i> <span id="contract_num">0</span> </span></a></li>
+		<li class="dropdown" >
+			<a href="#" title="{:L('QUICK_ADD')}" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;"><i class="icon-plus"  style="padding: 4px 0px 4px 0px;"></i>  <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a id="header_send_message">{:L('MESSAGE')}</a></li>
+				<volist name="simple" id="vo">
+					<li><a href="{$vo.url}">{$vo.module_name}</a></li>
+				</volist>
+				<li class="divider"></li>
+				<li><a href="{:U('navigation/index','type=simple')}">{:L('OPTION_SET')}</a></li>
+			</ul>
+		</li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding: 10px;">{:L('SYSTEM')}<b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<volist name="user" id="vo">
+					<if condition="$vo.title neq ''">
+					<li><a href="{$vo.url}">{$vo.title}</a></li>
+					</if>
+				</volist>
+				<li class="divider"></li>
+				<if condition="session('admin')"><li><a href="javascript:check_version();">{:L('CHECK_THE_NEW_VERSION')}</a></li></if>
+				<li><a href="{:U('user/logout')}">{:L('EXIT')}</a></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+<div id="dialog-upgrade" class="hide" title="{:L('VERSION_UPDATE')}">
+	<p>{:L('CURRENT_VERSION')}{:C("VERSION")} &nbsp; {:L('DELIVERY_TIME')}{:C("RELEASE")}</p>
+	<p id="process">{:L('CONNECT_REMOTE_SERVER')}</p>
+	<p id="info"></p>
+</div>
+<div id="message" class="hide"><p id="tips"></p></div>
+<div class="hide" id="dialog-message-send" title="{:L('WRITE_LETTER')}">loading...</div>
+<script type="text/javascript">
+$('#dialog-upgrade').dialog({
+	autoOpen: false,
+	modal: true,
+	width: 600,
+	maxHeight: 400,
+	position :["center",100],
+	buttons: { 
+		"Cancel": function () {
+			$(this).dialog("close");
+		}
+	}
+});
+$("#dialog-message-send").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 800,
+	maxHeight: 600,
+	position: ["center",100]
+});
+function check_version() {
+	$('#dialog-upgrade').dialog('open');
+	$.get("{:U('upgrade/index')}", function(data){
+		if (data.status) {
+			info = "<span style='color:green;'>" + data.info + "</span>";
+		} else {
+			info = "<span style='color:red;'>" + data.info + "</span>";
+		}
+		$("#dialog-upgrade #info").html(info);
+	});
+}
+a = 1;
+function fn(){
+	if(a == 1){
+		$('#message_tips').css({color:'white'});
+		a = 0;
+	}else{
+		$('#message_tips').css({color:'#9fc71c'});
+		a = 1;
+	}
+}
+var myInterval;
+
+function message_tips(){
+	$.get("{:U('message/tips')}", function(data){
+		if(data.data['message'] != $('#message_tips #message_num').html()){
+			$('#message_tips').css({color:'#9fc71c'});
+			myInterval = setInterval(fn,1000);
+			$("#message #tips").html("<audio id='ttsoundplayer'  autoplay='autoplay'><source src='Public/sound/Global.wav' type='audio/wav'></audio>");
+		} else {
+			$("#message #tips").html('');
+			if(data.data['message'] == 0){
+				$('#message_tips').css({color:'#fff'});
+				clearInterval(myInterval);
+			}
+		}
+	
+		if(data.data['task'] != '0'){
+			$('#task_tips').css({color:'#9fc71c'});
+		}else{
+			$('#task_tips').css({color:'#fff'});
+		}
+		if(data.data['event'] != '0'){
+			$('#event_tips').css({color:'#9fc71c'});
+		}else{
+			$('#event_tips').css({color:'#fff'});
+		}
+		if(data.data['contract'] != '0'){
+			$('#contract_tips').css({color:'#9fc71c'});
+		}else{
+			$('#contract_tips').css({color:'#fff'});
+		}
+		
+		$('#message_tips #message_num').html(data.data['message']);
+		$('#task_tips #task_num').html(data.data['task']);
+		$('#event_tips #event_num').html(data.data['event'] );
+		$('#contract_tips #contract_num').html(data.data['contract'] );
+	},'json');
+	setTimeout('message_tips()',5000);
+}
+
+
+$(function(){
+	message_tips();
+	
+	$("#header_send_message").click(function(){
+		$('#dialog-message-send').dialog('open');
+		$('#dialog-message-send').load('{:U("message/send")}');
+	});
+});
+</script>

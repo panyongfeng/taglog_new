@@ -1,0 +1,142 @@
+<include file="Public:header" />
+<div class="container">
+	<!-- Docs nav ================================================== -->
+	<div class="page-header">
+		<h4>商家列表</h4>
+	</div>
+	<include file="Public:alert" />
+	<p class="view"><b>视图：</b>
+	<img src=" __PUBLIC__/img/by_owner.png"/>  <a href="{:U('member/index')}" <if condition="$Think.get.by eq null">class="active"</if>>全部</a>  | 
+	<a href="{:U('member/index','by=today')}" <if condition="$Think.get.by eq 'today'">class="active"</if>>今日新增</a> | 
+	<a href="{:U('member/index','by=week')}" <if condition="$Think.get.by eq 'week'">class="active"</if>>本周新增</a> | 
+	<a href="{:U('member/index','by=month')}" <if condition="$Think.get.by eq 'month'">class="active"</if>>本月新增</a> |
+	<a href="{:U('member/index','by=disable')}" <if condition="$Think.get.by eq 'disable'">class="active"</if>>停用用户</a>
+	</p>
+	<div class="row">
+		<div class="span12">
+			<ul class="nav pull-left">
+				<li class="pull-left">
+					<form class="form-inline" id="searchForm" onsubmit="return checkSearchForm();" action="" method="get">
+					<ul class="nav pull-left">
+						<li class="pull-left">
+							<select style="width:auto" name="field" id="field" onchange="changeCondition()">
+								<option class="word" value="email">邮箱</option>
+								<option class="word" value="short_name">公司简称</option>
+								<option class="date" value="reg_time">注册时间</option>
+								<option class="date" value="last_login_date">最后登录时间</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="conditionContent" class="pull-left">
+						<select id="condition" style="width:auto" name="condition" onchange="changeSearch()">					
+								<option value="contains">包含</option>
+								<option value="is">是</option>
+								<option value="start_with">开始字符</option>
+								<option value="end_with">结束字符</option>
+								<option value="is_empty">为空</option>
+							</select>&nbsp;&nbsp;
+						</li>
+						<li id="searchContent" class="pull-left">
+							<input id="search" type="text" class="input-medium search-query" value="{$Think.get.search}" name="search"/>&nbsp;&nbsp;
+						</li>
+						<li class="pull-left">
+							<input type="hidden" name="m" value="member"/>
+							<if condition="$Think.get.by neq null"><input type="hidden" name="by" value="{$Think.get.by}"/></if>
+							<button type="submit" class="btn"> <img src="__PUBLIC__/img/search.png"/>  搜索</button>
+						</li>
+					</ul>
+					</form>
+				</li>
+			</ul>
+		</div>
+		<div class="span12">
+			<form id="form1" method="post">
+				<table class="table table-hover table-striped"> 
+					
+					<thead> 
+						<tr>
+							<th>邮箱</th>
+							<th>公司简称</th>
+							<th>注册ip</th>
+							<th>
+								<a title="升序" href="{:U('member/index','order=rt_up&'.$parameter)}"><i <if condition="$_GET['order'] == 'rt_up'">style="color:#FF780F;"</if> class="icon-arrow-up"></i></a> 
+								注册时间
+								<a title="降序" href="{:U('member/index','order=rt_down&'.$parameter)}"><i <if condition="$_GET['order'] == 'rt_down'">style="color:#FF780F;"</if> class="icon-arrow-down"></i></a>
+							</th>
+							<th>
+								<a title="升序" href="{:U('member/index','order=lt_up&'.$parameter)}"><i <if condition="$_GET['order'] == 'lt_up'">style="color:#FF780F;"</if> class="icon-arrow-up"></i></a> 
+								最后一次登录时间 
+								<a title="降序" href="{:U('member/index','order=lt_down&'.$parameter)}"><i <if condition="$_GET['order'] == 'lt_down'">style="color:#FF780F;"</if> class="icon-arrow-down"></i></a>
+							</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr><td colspan="7">{$page}</td></tr>
+					</tfoot>
+					<tbody>
+						<if condition="$memberlist eq null">
+							<tr><td colspan="6">----暂无数据！----</td></tr>
+						<else/>
+							<volist name="memberlist" id="vo">
+								<tr>
+									<td>{$vo.email}</td>
+									<td>{$vo.short_name}</td>
+									<td>{$vo.reg_ip}</td>
+									<td><if condition="$vo['reg_time'] gt 0">{$vo.reg_time|date="Y-m-d H:i",###}</if></td>
+									<td><if condition="$vo['last_login_time'] gt 0">{$vo.last_login_time|date="Y-m-d H:i",###}</if></td>
+									<td> 
+										<a href="javascript:void(0)" class="member_info" rel="{$vo.member_id}">查看/修改</a> &nbsp;
+										<a target="_blank" href="{:U('member/helplogin','member_id='.$vo['member_id'])}">模拟登陆</a> &nbsp;
+										<if condition="$vo['status'] != 2">
+											<a id="disable{$vo['member_id']}" class="disable" href="javascript:void(0)" rel="{$vo['member_id']}">停用</a>
+										<else />
+											<a id="disable{$vo['member_id']}" class="disable" href="javascript:void(0)" rel="{$vo['member_id']}">启用</a>
+										</if>
+									</td>
+								</tr>
+							</volist>
+						</if>
+					</tbody>
+					
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="hide" id="dialog-role-info" title="商家信息">loading...</div>
+<script type="text/javascript">
+$("#dialog-role-info").dialog({
+    autoOpen: false,
+    modal: true,
+	width: 650,
+	maxHeight: 800,
+	position: ["center",100]
+});
+$(function(){
+	<if condition="$Think.get.field neq null">
+		$("#field option[value='{$Think.get.field}']").prop("selected", true);changeCondition();
+		$("#condition option[value='{$Think.get.condition}']").prop("selected", true);changeSearch();
+		$("#search").prop('value', '{$Think.get.search}');
+	</if>
+	$(".disable").click(
+		function(){
+			var member_id = $(this).attr('rel');
+			$.get('{:U("member/disablemember")}' + '&member_id=' +member_id,function(data){
+				if (data.status == '1') {
+					$("#disable"+member_id).html('<font color="red">停用</font>');
+				} else if (data.status == '2') {
+					$("#disable"+member_id).html('<font color="red">启用</font>');
+				} else {
+					alert(data.info);
+				}
+			});
+		}
+	);
+	$(".member_info").click(function(){
+		$role_id = $(this).attr('rel');
+		$('#dialog-role-info').dialog('open');
+		$('#dialog-role-info').load('{:U("member/dialoginfo","act=edit&id=")}'+$role_id);
+	});
+});
+</script>
+<include file="Public:footer" />

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="http://yhb360.qiniudn.com/favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<script type="text/javascript">
+	var browserInfo = {browser:"", version: ""};
+	var ua = navigator.userAgent.toLowerCase();
+	if (window.ActiveXObject) {
+		browserInfo.browser = "IE";
+		browserInfo.version = ua.match(/msie ([\d.]+)/)[1];
+		if(browserInfo.version <= 7){
+			if(confirm("您的浏览器版本过低，请使用IE8及以上浏览器，或者firefox、chrome、360等浏览器;")){}
+			location.href = 'http://chrome.360.cn/';
+		}
+	}
+</script>
+</head>
+<body class="no_index">
+    <div class="top">
+        <div class="w980">
+            <a href="{:U('index/index')}"><img src="http://yhb360.qiniudn.com/images/logo.png" class="logo"></a>
+        </div>
+    </div>
+	<div class="w980 main_table">
+		<div class="form_header">
+			<present name="message">
+				<?php echo($message); ?>
+			<else/>
+				<?php echo($error); ?>
+			</present>
+		</div>
+		<div class="form_main">
+            <p class="jump">
+			页面自动 <a id="href" href="<?php echo($jumpUrl); ?>">跳转</a> 等待时间： <b id="wait"><?php echo($waitSecond); ?></b></p> 
+		</div>
+	</div>
+    <div class="bottom">
+        沪ICP备11046618号-1　Copyright©2014
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+(function(){
+var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+var interval = setInterval(function(){
+	var time = --wait.innerHTML;
+	if(time == 0) {
+		location.href = href;
+		clearInterval(interval);
+	};
+}, 1000);
+})();
+</script>

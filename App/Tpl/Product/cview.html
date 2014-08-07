@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="http://www.yhb360.com/">
+<title>用户宝</title>
+<meta name="keywords" content="视频说明书，电子说明书，二维码，二维码说明书，二维码链接，专业说明书平台，说明书，说明书引擎，免费视频">
+<meta name="description" content="不只是电子化的产品说明书，而是动态的、全方位的产品描述平台。让消费者为您传播品牌，让口碑“转”起来。扫描即可浏览，让用户更直观地理解你的产品与品牌文化">
+<link rel="shortcut icon" href="./favicon.png"/>
+<link href="http://yhb360.qiniudn.com/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://yhb360.qiniudn.com/css/style.css" rel="stylesheet">
+<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'msie')">
+<style>
+.product_view_box {
+	width: 402px;
+}
+.product_view_page_box {
+	width: 385px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+}
+.product_view_page_box_big {
+	overflow-y:hidden;
+}
+</style>
+</if>
+<script src="http://yhb360.qiniudn.com/js/jquery-1.9.0.min.js"></script>
+<script src="http://yhb360.qiniudn.com/js/jquery-ui-1.10.0.custom.min.js"></script>
+</head>
+<body class="no_index">
+    <div class="w980">
+		<div class="product_view_box">
+			<div class="product_view_page_box">
+				<div class="product_view_page_box_big">
+					<volist name="pages" id="page" key="pages_k">
+					<div class="product_view_page">
+						<div class="product_view_page_content">
+							<p class="product_view_name">{$product.name}</p>
+							<p class="product_view_content_name">{$page.subject}</p>
+							<volist name="page.content" id="content">
+							<div style="margin-bottom:20px;">
+								<div class="product_view_description">{$content.description}</div>
+								<volist name="content.file" id="file">
+								<div class="product_view_file">
+									<div class="product_view_file_box">
+										<if condition="$file['type'] == 'image'">
+										<img class="uploadify_img" width="100%" src="{$file.path}">
+										<elseif condition="$file['type'] == 'video'" />
+										<if condition="$file['status'] == 1">
+										<php> $file['height'] = $file['height']?$file['height']:490 </php>
+										<php> $file['width'] = $file['width'] ? $file['width']:600 </php>
+										<php> $swf_height = 348 * $file['height'] /$file['width'] </php>
+										<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'chrome')">
+										<video width="100%" class="polyvplayer{$file.vid} video" preload="metadata" controls="controls">
+											<source src="{$file.mp4}" type="video/mp4" />
+										</video>
+										<script>
+											var swf_width = $('.product_view_file_box').width();
+											var swf_height = swf_width * {$file.height}/{$file.width};
+											$('.polyvplayer{$file.vid}').attr('height',swf_height);
+										</script>
+										<else />
+										<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" height="{$swf_height}" width="348" id="polyvplayer{$file.vid}">
+										<param name="movie" value="http://player.polyv.net/videos/{$file.vid}.swf">
+										<param name="allowscriptaccess" value="always">
+										<param name="wmode" value="opaque">   
+										<param name="allowFullScreen" value="true" />
+										<embed src="http://player.polyv.net/videos/{$file.vid}.swf" width="348" height="{$swf_height}" type="application/x-shockwave-flash" allowscriptaccess="always" wmode="opaque" name="polyvplayer{$file.vid}" allowFullScreen="true" /></embed>
+										</object>
+										</if>
+										<elseif condition="$file['status'] == 0" />
+										<img class="uploadify_img" width="100%" src="{$file.first_image}">
+										<div rel="{$file.vid}" class="uploadify_img_status"><span>根据国家政策规定，您的视频正在被审核。建议您先进行其他编辑。20分钟左右后再查看结果将会自动生效。</span></div>
+										<elseif condition="$file['status'] == 2" />
+										<img class="uploadify_img" width="100%" src="{$file.first_image}">
+										<div rel="{$file.vid}" class="uploadify_img_status"><span>根据国家政策规定，您的视频审核失败。</span></div>
+										<elseif condition="$file['status'] == 3" />
+										<img class="uploadify_img" width="100%" src="{$file.first_image}">
+										<div rel="{$file.vid}" class="uploadify_img_status"><span>根据国家政策规定，您的视频存在违法信息，已被删除。</span></div>
+										</if>
+										</if>
+									</div>
+								</div>
+								</volist>
+							</div>
+							</volist>
+						</div>
+					</div>
+					</volist>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="product_view_botton_left"></div>
+			<div class="product_view_botton_right"></div>
+		</div>
+		<div class="product_count_pages">
+			<volist name="pages" id="page" key="pages_k">
+				<span <if condition="$pages_k == 1">class="active"</if>></span>
+			</volist>
+		</div>
+		<script>
+		var i = 1;
+		var height_time_stop = false;
+		$(function(){
+			$('table').attr('width','99%');
+			$('table').attr('border','1');
+			$('table').attr('cellspacing','0');
+			<if condition="!stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+			$(".product_view_page_content").draggable({
+				appendTo:'product_view_page',
+				cursor: 'move',
+				axis:"y",
+				containment: 'parent'
+			});
+			var page_num = 0 - ({:count($pages)} - 1) * 370;
+			$('.product_view_page_box_big').width({:count($pages)} * 370);
+			<else/>
+			var page_num = 0 - ({:count($pages)} - 1) * 385;
+			$('.product_view_page_box_big').width({:count($pages)} * 385);
+			</if>
+
+			$('.product_view_botton_right').click(function(){
+				$(".product_view_page").stop(true,true);
+				if(i < {:count($pages)}){
+					height_time_stop = true;
+					<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+					$('.product_view_page_box_big').height($('.product_view_page_content').eq(i).height());
+					</if>
+					$('.product_view_page').animate({left:'-=370px'});
+					$('.product_count_pages span.active').removeClass('active').next().addClass('active');
+					++i;
+				}
+			});
+			$('.product_view_botton_left').click(function(){
+				$(".product_view_page").stop(true,true);
+				if(i > 1){
+					height_time_stop = true;
+					--i;
+					<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+					var s= i-1;
+					$('.product_view_page_box_big').height($('.product_view_page_content').eq(s).height());
+					</if>
+					$('.product_view_page').animate({left:'+=370px'});
+					$('.product_count_pages span.active').removeClass('active').prev().addClass('active');
+				}
+			});
+			$(document).on("click","object",function (e){
+				e.preventDefault();
+			});
+			$(document).on("click","embed",function (e){
+				e.preventDefault();
+			});
+		});
+		
+		<if condition="stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')">
+		var h_time = '';
+		function set_height(){
+			if(height_time_stop == false){
+				var s = i - 1;
+				$('.product_view_page_box_big').height($('.product_view_page_content').eq(s).height());
+				height_time = setTimeout('set_height()',h_time);
+				h_time+=200;
+			}
+		}
+		set_height();
+		</if>
+		//百度统计
+		var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+		document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F287083f19481e4a2a0e7db232e8085cc' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+    </div>
+</body>
+</html>
