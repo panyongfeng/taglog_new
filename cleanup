@@ -1,0 +1,14 @@
+rm -rf Admin/Runtime/Temp
+rm -rf Admin/Runtime/Cache
+rm -rf Admin/Runtime/Logs
+
+rm -rf App/Runtime/Temp
+rm -rf App/Runtime/Cache
+rm -rf App/Runtime/Logs
+
+chmod -R 777 App/Runtime
+chmod -R 777 Admin/Runtime
+
+
+mkdir Uploads
+chmod -R 777 Uploads
