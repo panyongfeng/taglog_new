@@ -187,6 +187,16 @@
 			h_time = 500;
 			set_height();
 		});
+
+
+		if({$product['product_id']} == 45) {
+				$('.product_view_name').css("background-image", "url('../images/ldbg.png')");
+				$('.product_view_name').css("width", "100%");
+				$('.product_view_name').css("color", "#ffffff");
+				$('.product_view_name').prepend("<img src='../images/ldblogo.png' width='15%'>");
+				$('.product_view_content_name').css("background", "#000000");
+		}
+
 		//百度统计
 		var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
 		document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F287083f19481e4a2a0e7db232e8085cc' type='text/javascript'%3E%3C/script%3E"));
