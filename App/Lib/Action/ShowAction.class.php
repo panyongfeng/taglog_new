@@ -9,8 +9,14 @@ class ShowAction extends Action {
 
 	public function show() {
 		$m_product = M('Product');
-		echo("hi");
-		die();
+		$where = array();
+		$where['status'] = 1;
+		$order = 'hits';
+		$list = $m_product->where($where)->order($order)->select();
+		foreach($list as $k=>$v){
+
+		}
+		$this->display('showcases');
 	}
 }
 
