@@ -68,7 +68,7 @@ class ProductAction extends Action {
 						$data['product_id'] = $product_id;
 						$data['verify'] = $verify;
 						//$url = 'http://www.yhb360.com/recall/'.$data['product_id'].'/'.$data['verify'];
-						$url = $_SERVER['HTTP_HOST'].'/recall/'.$data['product_id'].'/'.$data['verify'];
+						$url = C('APPUSER_BASE_URL').'/recall/'.$data['product_id'].'/'.$data['verify'];
 						if(session('?member_id'))	$this->ajaxReturn($data, "保存成功", 1) ;
 						else	$this->ajaxReturn($data, "保存成功！<br/> 由于您尚未登录，直接离开将会丢失已编辑的内容。强烈建议您保存此链接:<a target='_blank' href='".$url."'>".$url."</a>，然后再离开。", 2) ;
 					}else{
@@ -113,14 +113,14 @@ class ProductAction extends Action {
 				}
 				if(!$product['member_id'] && $product['verify']) {
 					//$this->copylink = 'http://www.yhb360.com/recall/'.$product['product_id'].'/'.$product['verify'];
-					$this->copylink = $_SERVER['HTTP_HOST'].'/recall/'.$product['product_id'].'/'.$product['verify'];
+					$this->copylink = C('APPUSER_BASE_URL').'/recall/'.$product['product_id'].'/'.$product['verify'];
 				}
 			
 				$pages = $m_page->where('product_id = %d', intval($product['product_id']))->select();
 				foreach($pages as $k=>$v){
 					$pages[$k]['content'] = D('Video')->checkStatus(unserialize($v['content']));
 				}
-				$this->link = $_SERVER['HTTP_HOST'].'/prd/'.$product['product_id'];
+				$this->link = C('APPUSER_BASE_URL').'/prd/'.$product['product_id'];
 				$this->pages = $pages;
 				$this->product = $product;
 				$islogin = session('?email') ? 1 : 0;
@@ -265,7 +265,7 @@ class ProductAction extends Action {
 				}
 				if(!$product['member_id'] && $product['verify']) {
 					//$this->copylink = 'http://www.yhb360.com/recall/'.$product['product_id'].'/'.$product['verify'];
-					$this->copylink = $_SERVER['HTTP_HOST'].'/recall/'.$product['product_id'].'/'.$product['verify'];
+					$this->copylink = C('APPUSER_BASE_URL').'/recall/'.$product['product_id'].'/'.$product['verify'];
 				}
 				$islogin = session('?email') ? 1 : 0;
 				$this->islogin = $islogin;
@@ -359,7 +359,7 @@ class ProductAction extends Action {
 			//注释为完整链接
 			//$data = U('product/mobileview', 'product_id='.$product['product_id'], '','', true);
 			//$data = 'http://www.yhb360.com/prd/'.$product['product_id'];
-			$data = $_SERVER['HTTP_HOST'].'/prd/'.$product['product_id'];
+			$data = C('APPUSER_BASE_URL').'/prd/'.$product['product_id'];
 			
 			$png_temp_dir = './qrpng/';
 			$filename = $png_temp_dir.md5($product['product_id'].$product['create_time']).'_'.$qrsize.'.png';

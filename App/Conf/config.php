@@ -23,5 +23,7 @@ return array(
 	),
 
 
+
+	'APPUSER_BASE_URL' => "http://".$_SERVER['HTTP_HOST'],
 );
 ?>
