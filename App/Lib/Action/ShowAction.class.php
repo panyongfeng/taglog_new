@@ -10,7 +10,7 @@ class ShowAction extends Action {
 	public function _initialize(){
 		$action = array(
 			'permission'=>array('show'),
-			'allow'=>array('logout', 'index')
+			'allow'=>array('logout', 'index', "show")
 		);
 
 		B('Authenticate', $action);
