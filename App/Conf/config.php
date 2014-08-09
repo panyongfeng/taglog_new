@@ -23,7 +23,5 @@ return array(
 	),
 
 
-
-	'APPUSER_BASE_URL' => "http://www.yhb360.com",
 );
 ?>
