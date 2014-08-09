@@ -7,6 +7,15 @@
 
 class ShowAction extends Action {
 
+	public function _initialize(){
+		$action = array(
+			'permission'=>array('show'),
+			'allow'=>array('logout', 'index')
+		);
+
+		B('Authenticate', $action);
+	}
+	
 	public function show() {
 		$m_product = M('Product');
 		$where = array();
