@@ -22,9 +22,13 @@ class ShowAction extends Action {
 		$where['status'] = 1;
 		$order = 'hits';
 		$list = $m_product->where($where)->order($order)->select();
+		$this->list = $list;
 		foreach($list as $k=>$v){
 
 		}
+		echo ($_SERVER['HTTP_HOST']."---");
+		echo ($_SERVER['REQUEST_URI'])
+		die();
 		$this->display('showcases');
 	}
 }
