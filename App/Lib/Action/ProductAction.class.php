@@ -8,7 +8,7 @@ class ProductAction extends Action {
 	public function _initialize(){
 		$action = array(
 			'permission'=>array('add', 'edit','view','mobileview', 'qrdownload', 'getvideostatus', 'sendvideostatus'),
-			'allow'=>array('index', 'delete', 'changecategory', 'show')
+			'allow'=>array('index', 'delete', 'changecategory')
 		);
 
 		B('Authenticate', $action);
