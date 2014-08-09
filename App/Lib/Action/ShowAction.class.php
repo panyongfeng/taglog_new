@@ -27,7 +27,7 @@ class ShowAction extends Action {
 
 		}
 		echo ($_SERVER['HTTP_HOST']."---");
-		echo ($_SERVER['REQUEST_URI'])
+		echo ($_SERVER['REQUEST_URI']);
 		die();
 		$this->display('showcases');
 	}

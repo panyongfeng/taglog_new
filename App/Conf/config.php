@@ -21,5 +21,9 @@ return array(
 	'URL_ROUTE_RULES' => array( //定义路由规则
 		'yhb/:id'               => 'index.php?m=product&a=edit&product_id=1',
 	),
+
+
+
+	'APPUSER_BASE_URL' => "http://www.yhb360.com",
 );
 ?>
