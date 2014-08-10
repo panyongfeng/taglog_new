@@ -53,6 +53,8 @@ class ShowAction extends Action {
 		$pages = $m_page->where(array('product_id'=>$productid))->find();
 		// for every page, find the content, 
 		foreach($pages as $pagek=>$pagev) {
+			echo ($pagev['content']);
+			die();
 			$page_content = unserialize($pagev['content']);
 			foreach ($page_content as $ck=>$cv){
 				// find first image as cover image
