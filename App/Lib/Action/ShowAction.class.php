@@ -33,7 +33,7 @@ class ShowAction extends Action {
 		foreach($products as $k=>$v) {
 			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
-			else $this->products['coverimage'] = $coverimage;
+			else $this->products[$k]['coverimage'] = $coverimage;
 		}
 		
 		$this->display('showcases');
