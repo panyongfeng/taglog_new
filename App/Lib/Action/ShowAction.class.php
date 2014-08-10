@@ -28,7 +28,7 @@ class ShowAction extends Action {
 		$where['status'] = 1;
 		$order = 'hits desc';
 		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
-		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
+		$products = $m_product->where($where)->order($order)->page($p.',16')->select();
 		
 		$count = 0;
 		$prd = array();
