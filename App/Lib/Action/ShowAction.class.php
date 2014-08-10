@@ -31,7 +31,7 @@ class ShowAction extends Action {
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
 		$this->products = $products;
 		foreach($products as $k=>$v) {
-			$coverimage = genCoverImageForProduct($v['product_id']);
+			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
 			else $this->products['coverimage'] = $coverimage;
 		}
