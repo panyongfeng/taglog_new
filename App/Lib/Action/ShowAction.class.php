@@ -10,8 +10,8 @@ class ShowAction extends Action {
 
 	public function _initialize(){
 		$action = array(
-			'permission'=>array('show'),
-			'allow'=>array('logout', 'index', "show")
+			'permission'=>array('showcases'),
+			'allow'=>array('logout', 'index', 'showcases')
 		);
 
 		B('Authenticate', $action);
@@ -23,20 +23,25 @@ class ShowAction extends Action {
 
 
 		$m_product = D('Product');
-		$products_v = array();
 
 		$where = array();
 		$where['status'] = 1;
 		$order = 'hits desc';
 		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
-		$this->products_v = $products;
+		$this->products = $products;
+		$count = 0;
+		$this->coverimages = array();
 		foreach($products as $k=>$v) {
 			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
-			else $this->products_v[$k]['coverimage'] = $coverimage;
+			else {
+				$this->coverimages[$count] = $coverimage;
+				$count++;
+			}
 		}
-		
+
+		$this->count = $count;
 		$this->display('showcases');
 	}
 
