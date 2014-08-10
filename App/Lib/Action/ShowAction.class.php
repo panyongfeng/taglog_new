@@ -23,17 +23,18 @@ class ShowAction extends Action {
 
 
 		$m_product = D('Product');
+		$products_v = array();
 
 		$where = array();
 		$where['status'] = 1;
 		$order = 'hits desc';
 		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
-		$this->products = $products;
+		$this->products_v = $products;
 		foreach($products as $k=>$v) {
 			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
-			else $this->products[$k]['coverimage'] = $coverimage;
+			else $this->products_v[$k]['coverimage'] = $coverimage;
 		}
 		
 		$this->display('showcases');
