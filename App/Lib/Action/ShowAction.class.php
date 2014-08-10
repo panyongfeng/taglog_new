@@ -50,7 +50,7 @@ class ShowAction extends Action {
 		$m_page = D('Page');
 		
 		// find pages for every product by id
-		$pages = $m_page->where(array('product_id'=>$productid))->find();
+		$pages = $m_page->where(array('product_id'=>$productid))->select();
 		// for every page, find the content, 
 		foreach($pages as $pagek=>$pagev) {
 			echo ($pagev['content']);
