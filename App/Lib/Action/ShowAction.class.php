@@ -19,7 +19,7 @@ class ShowAction extends Action {
 
 	}
 	
-	public function show() {
+	public function showcases() {
 
 
 		$m_product = D('Product');
@@ -54,8 +54,7 @@ class ShowAction extends Action {
 		$pages = $m_page->where(array('product_id'=>$productid))->select();
 		// for every page, find the content, 
 		foreach($pages as $pagek=>$pagev) {
-			echo ($pagev['content']);
-			die();
+
 			$page_content = unserialize($pagev['content']);
 			foreach ($page_content as $ck=>$cv){
 				// find first image as cover image
