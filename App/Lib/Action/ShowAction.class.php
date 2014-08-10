@@ -31,16 +31,16 @@ class ShowAction extends Action {
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
 		$this->products = $products;
 		$count = 0;
-		$this->coverimages = array();
+		$coverimages = array();
 		foreach($products as $k=>$v) {
 			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
 			else {
-				$this->coverimages[$count] = $coverimage;
+				$coverimages[$count] = $coverimage;
 				$count++;
 			}
 		}
-
+		$this->coverimages = $coverimages;
 		$this->count = $count;
 		$this->display('showcases');
 	}
