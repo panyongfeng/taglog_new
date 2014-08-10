@@ -16,17 +16,17 @@ class ShowAction extends Action {
 
 		B('Authenticate', $action);
 
-		$m_product = D('Product');
-		$m_page = D('Page');
-		$m_video = D("Video");
 
 	}
 	
 	public function show() {
-		
+
+
+		$m_product = D('Product');
+
 		$where = array();
 		$where['status'] = 1;
-		$order = 'hits';
+		$order = 'hits desc';
 		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
 		$this->products = $products;
@@ -47,6 +47,8 @@ class ShowAction extends Action {
 	private function genCoverImageForProduct($productid) {
 		$is_succeed = false;
 
+		$m_page = D('Page');
+		
 		// find pages for every product by id
 		$pages = $m_page->where(array('product_id'=>$productid))->find();
 		// for every page, find the content, 
