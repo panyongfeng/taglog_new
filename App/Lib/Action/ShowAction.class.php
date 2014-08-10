@@ -29,18 +29,19 @@ class ShowAction extends Action {
 		$order = 'hits desc';
 		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
 		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
-		$this->products = $products;
+		
 		$count = 0;
-		$coverimages = array();
+		$prd = array();
 		foreach($products as $k=>$v) {
 			$coverimage = $this->genCoverImageForProduct($v['product_id']);
 			if(!$coverimage) continue;
 			else {
-				$coverimages[$count] = $coverimage;
+				$prd[$count] = $v;
+				$prd[$count]['img'] = $coverimage;
 				$count++;
 			}
 		}
-		$this->coverimages = $coverimages;
+		$this->prd = $prd;
 		$this->count = $count;
 		$this->display('showcases');
 	}

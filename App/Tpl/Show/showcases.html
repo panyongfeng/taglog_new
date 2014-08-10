@@ -76,26 +76,26 @@
     <!-- show demo videos -->
     <div class="row" id="prdlist">
 
-    <for start=0 end={$count}>
+    <volist name="prd" id="data">
 
       	<div class="col-sm-11 col-md-5 thumbnail_outer">
 		  <div class="col-sm-6 col-md-6">
 		    <div class="thumbnail">
-		      <img src="{$coverimages[{$i}]}" alt="点击数:{$products[{$i}]['hits']}">
-		      <div class="flipup_appear" value="">{$products[{$i}]['description']}</div>
+		      <img src="{$data['img']}" alt="点击数:{$data['hits']}">
+		      <div class="flipup_appear" value="">{$data['description']}</div>
 		    </div>
 		  </div>
 		  <div class="col-sm-6 col-md-6">
 		  	<div class="">
 		      <div class="caption">
-		        <h3>{$products[$i]['name']}</h3>
+		        <h3>{$data['name']}</h3>
 		        <p></p>
-		        <p><a href="http://www.yhb360.com/prd/{$products[{$i}]['product_id']}" class="btn btn-default" role="button">查看详细 &raquo;</a> <a href="#" class="btn btn-default" role="button">去看官网 &raquo;</a></p>
+		        <p><a href="http://www.yhb360.com/prd/{$data['product_id']}" class="btn btn-default" role="button">查看详细 &raquo;</a> <a href="#" class="btn btn-default" role="button">去看官网 &raquo;</a></p>
 		      </div>
 		    </div>
 		  </div>
 		</div>
-	</for>
+	</volist>
 		  
 	</div>
 
