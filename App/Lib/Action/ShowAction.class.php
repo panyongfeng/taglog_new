@@ -7,6 +7,7 @@
 
 class ShowAction extends Action {
 
+
 	public function _initialize(){
 		$action = array(
 			'permission'=>array('show'),
@@ -14,22 +15,60 @@ class ShowAction extends Action {
 		);
 
 		B('Authenticate', $action);
+
+		$m_product = D('Product');
+		$m_page = D('Page');
+		$m_video = D("Video");
+
 	}
 	
 	public function show() {
-		$m_product = M('Product');
+		
 		$where = array();
 		$where['status'] = 1;
 		$order = 'hits';
-		$list = $m_product->where($where)->order($order)->select();
-		$this->list = $list;
-		foreach($list as $k=>$v){
-
+		$p = isset($_GET['p']) ? intval($_GET['p']) : 1 ;
+		$products = $m_product->where($where)->order($order)->page($p.',15')->select();
+		$this->products = $products;
+		foreach($products as $k=>$v) {
+			$coverimage = genCoverImageForProduct($v['product_id']);
+			if(!$coverimage) continue;
+			else $this->products['coverimage'] = $coverimage;
 		}
-		echo ($_SERVER['HTTP_HOST']."---");
-		echo ($_SERVER['REQUEST_URI']);
-		die();
+		
 		$this->display('showcases');
+	}
+
+
+	/*
+	 * By iterating every video or image to find a cover image
+	 * use 
+	 */
+	private function genCoverImageForProduct($productid) {
+		$is_succeed = false;
+
+		// find pages for every product by id
+		$pages = $m_page->where(array('product_id'=>$productid))->find();
+		// for every page, find the content, 
+		foreach($pages as $pagek=>$pagev) {
+			$page_content = unserialize($pagev['content']);
+			foreach ($page_content as $ck=>$cv){
+				// find first image as cover image
+				// or find a image as cover image
+				// else doesnot show this product 
+				if(!empty($cv['file'])){
+					foreach($cv['file'] as $key=>$vo){
+						if($vo['type'] == 'video'){
+							return $page_content[$pagek]['file'][$key]['first_image'];
+						} else if($vo['type'] == 'image') {
+							// if there is a image, just use it.
+							return $page_content[$pagek]['file'][$key]['path'];
+						}
+					}
+				}
+			}
+		}
+		return $is_succeed;
 	}
 }
 
