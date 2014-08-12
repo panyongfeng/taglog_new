@@ -152,7 +152,8 @@
 			$(document).on("click","embed",function (e){
 				e.preventDefault();
 			});
-			if({$product['product_id']} == 45) {
+			var pid = $product['product_id']};
+			if(pid == 45 || pid == 52 || pid == 54) {
 				$('.product_view_name').css("background-image", "url('../images/ldbg.png')");
 				$('.product_view_name').css("width", "100%");
 				$('.product_view_name').css("color", "#ffffff");
